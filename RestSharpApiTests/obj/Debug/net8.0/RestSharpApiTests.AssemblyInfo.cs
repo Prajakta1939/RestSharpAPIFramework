@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RestSharpApiTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fc62e13b05fa90077405f396fcf1b1aa5ab109d7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2398c7a0a4ffa62d628c8439ad434104371e2706")]
 [assembly: System.Reflection.AssemblyProductAttribute("RestSharpApiTests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RestSharpApiTests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

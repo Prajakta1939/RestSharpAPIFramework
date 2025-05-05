@@ -12,6 +12,7 @@ namespace RestSharpApiTests.ApiTests
         [SetUp]
         public void Setup()
         {
+            // Initialize RestClient with the base URL
             _client = new RestClient("https://reqres.in/");
         }
 
@@ -29,6 +30,9 @@ namespace RestSharpApiTests.ApiTests
             var request = new RestRequest("api/users", Method.Post);
             request.AddJsonBody(user);
 
+            // Add the x-api-key header for authentication
+            request.AddHeader("x-api-key", "reqres-free-v1");
+
             // Execute the request
             var response = _client.Execute(request);
 
@@ -41,8 +45,8 @@ namespace RestSharpApiTests.ApiTests
                 var responseBody = JsonConvert.DeserializeObject<User>(response.Content);
 
                 // Assert that the returned name and job match the request data
-                Assert.That(responseBody.Name, Is.EqualTo(user.Name));
-                Assert.That(responseBody.Job, Is.EqualTo(user.Job));
+                Assert.That(responseBody?.Name, Is.EqualTo(user.Name));
+                Assert.That(responseBody?.Job, Is.EqualTo(user.Job));
             }
             else
             {
@@ -53,7 +57,8 @@ namespace RestSharpApiTests.ApiTests
         [TearDown]
         public void TearDown()
         {
-            _client?.Dispose(); // Dispose the RestClient
+            // Ensure RestClient is disposed after each test
+            _client?.Dispose();
         }
     }
 }
