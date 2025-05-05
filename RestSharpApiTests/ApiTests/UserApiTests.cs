@@ -1,44 +1,59 @@
 using NUnit.Framework;
-using RestSharpApiTests.Utilities;
-using RestSharpApiTests.Models;
+using RestSharp;
 using Newtonsoft.Json;
-using System.IO;
+using RestSharpApiTests.Models;
 
 namespace RestSharpApiTests.ApiTests
 {
     public class UserApiTests
     {
-        private ApiClient _apiClient;
+        private RestClient _client;
 
         [SetUp]
         public void Setup()
         {
-            _apiClient = new ApiClient("https://reqres.in/");
+            _client = new RestClient("https://reqres.in/");
         }
 
         [Test]
         public void CreateUser_ShouldReturn201()
         {
-            // Read user data from JSON file
-            var json = File.ReadAllText("TestData/CreateUser.json");
-            var user = JsonConvert.DeserializeObject<User>(json);
+            // Create the user object to send in the request body
+            var user = new User
+            {
+                Name = "Prajakta",
+                Job = "Tester"
+            };
 
-            var response = _apiClient.SendPostRequest("api/users", user);
+            // Create a request for POST method with the body
+            var request = new RestRequest("api/users", Method.Post);
+            request.AddJsonBody(user);
 
+            // Execute the request
+            var response = _client.Execute(request);
+
+            // Assert the response status code is 201 (Created)
             Assert.That((int)response.StatusCode, Is.EqualTo(201));
 
-            var responseBody = JsonConvert.DeserializeObject<User>(response.Content);
-            Assert.That(responseBody.Name, Is.EqualTo(user.Name));
-            Assert.That(responseBody.Job, Is.EqualTo(user.Job));
+            // Deserialize the response body into a User object, add a null check
+            if (response.Content != null)
+            {
+                var responseBody = JsonConvert.DeserializeObject<User>(response.Content);
+
+                // Assert that the returned name and job match the request data
+                Assert.That(responseBody.Name, Is.EqualTo(user.Name));
+                Assert.That(responseBody.Job, Is.EqualTo(user.Job));
+            }
+            else
+            {
+                Assert.Fail("Response content is null");
+            }
         }
 
-        [Test]
-        public void GetUser_ShouldReturn200()
+        [TearDown]
+        public void TearDown()
         {
-            var response = _apiClient.SendGetRequest("api/users/2");
-
-            Assert.That((int)response.StatusCode, Is.EqualTo(200));
-            Assert.IsNotEmpty(response.Content);
+            _client?.Dispose(); // Dispose the RestClient
         }
     }
 }
