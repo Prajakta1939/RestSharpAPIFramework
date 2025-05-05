@@ -2,12 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOTNET_ROOT = '/usr/share/dotnet'
-    }
-
-    tools {
-        // This name must match the .NET SDK installed in Jenkins global tool config
-        dotnet 'dotnet6' 
+        DOTNET_ROOT = '/usr/share/dotnet' // Optional, depends on your setup
+        PATH = "/usr/share/dotnet:${env.PATH}" // Ensure dotnet is in PATH
     }
 
     stages {
@@ -38,7 +34,6 @@ pipeline {
 
     post {
         always {
-            // Publishes NUnit-compatible test reports (for HTML UI in Jenkins)
             junit allowEmptyResults: true, testResults: '**/TestResults/*.trx'
         }
     }
